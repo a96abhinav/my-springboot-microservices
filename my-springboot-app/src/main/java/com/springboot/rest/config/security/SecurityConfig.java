@@ -31,7 +31,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
-                                .requestMatchers("/error").permitAll()
+                                .requestMatchers("/error","/api/media-library-svc/**").permitAll()
                                 .anyRequest().authenticated())
                 .oauth2Login(oauth2Login ->
                         oauth2Login

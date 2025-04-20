@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.springboot.rest.model.EmployeeModel;
 import com.springboot.rest.model.MaleAndFemaleCountByDepartment;
+import org.springframework.http.ResponseEntity;
 
 public interface EmployeeService {
 	public List<EmployeeModel> findAll(Pageable pageable);
@@ -19,4 +20,6 @@ public interface EmployeeService {
 	public List<MaleAndFemaleCountByDepartment> findMaleAndFemaleCountByDepartment();
 
 	public Long getTotalCount();
+
+	public ResponseEntity testCircuitBreakerPattern(String productId);
 }

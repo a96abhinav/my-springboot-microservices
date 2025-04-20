@@ -99,4 +99,9 @@ public class EmployeeController implements EmployeeApi {
 		Long count = employeeService.getTotalCount();
 		return ResponseEntity.ok(count);
 	}
+
+	@GetMapping(path = "/employee/testCircuitBreakerPattern")
+	public ResponseEntity testCircuitBreakerPattern() {
+		return employeeService.testCircuitBreakerPattern("2222");
+	}
 }
