@@ -2,10 +2,14 @@ package com.springboot.rest.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +40,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	// @Cacheable(value = "employee", key = "#root.methodName", unless =
 	// "#result==null")
 	public List<EmployeeModel> findAll(Pageable pageable) {
-		
+
 		//Sort sort = Sort.by(Sort.Direction.ASC, "empName");
 		//Pageable pageable = PageRequest.of(0, 5, sort);
 		Page<Employee> pageableEmployees = employeeJpaRepository.findAll(pageable);
@@ -56,9 +60,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 				skills.add(EmployeeSkillModel.builder().id(skill.getId()).skillName(skill.getSkillName()).build());
 			});
 
-			EmployeeAddressModel address = emp.getEmpAddress()!= null?EmployeeAddressModel.builder().id(emp.getEmpAddress().getId())
+			EmployeeAddressModel address = emp.getEmpAddress() != null ? EmployeeAddressModel.builder().id(emp.getEmpAddress().getId())
 					.street(emp.getEmpAddress().getStreet()).city(emp.getEmpAddress().getCity())
-					.state(emp.getEmpAddress().getState()).zipCode(emp.getEmpAddress().getZipCode()).build():null;
+					.state(emp.getEmpAddress().getState()).zipCode(emp.getEmpAddress().getZipCode()).build() : null;
 
 			employeeResponse
 					.add(EmployeeModel.builder().empId(emp.getEmpId()).empName(emp.getEmpName()).empAge(emp.getEmpAge())
@@ -102,33 +106,36 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	@Transactional
 	public EmployeeModel saveEmployee(EmployeeModel employeeRequest) {
-		
+
 		Employee employee = new Employee();
 
-		if(null != employeeRequest.getEmpProjects()){
-		employeeRequest.getEmpProjects().forEach(project -> {
-			Project projct = new Project();
-			projct.setProjectId(project.getProjectId());
-			projct.setTitle(project.getTitle());
-			employee.getEmpProjects().add(projct);
-		});}
+		if (null != employeeRequest.getEmpProjects()) {
+			employeeRequest.getEmpProjects().forEach(project -> {
+				Project projct = new Project();
+				projct.setProjectId(project.getProjectId());
+				projct.setTitle(project.getTitle());
+				employee.getEmpProjects().add(projct);
+			});
+		}
 
-		if(null != employeeRequest.getEmpSkills()){
-		employeeRequest.getEmpSkills().forEach(skill -> {
-			Skill skl = new Skill();
-			skl.setId(skill.getId());
-			skl.setSkillName(skill.getSkillName());
-			employee.addSkill(skl);
-		});}
+		if (null != employeeRequest.getEmpSkills()) {
+			employeeRequest.getEmpSkills().forEach(skill -> {
+				Skill skl = new Skill();
+				skl.setId(skill.getId());
+				skl.setSkillName(skill.getSkillName());
+				employee.addSkill(skl);
+			});
+		}
 
-		if(null != employeeRequest.getEmpAddress()){
-		Address address = new Address();
-		address.setId(employeeRequest.getEmpAddress().getId());
-		address.setStreet(employeeRequest.getEmpAddress().getStreet());
-		address.setCity(employeeRequest.getEmpAddress().getCity());
-		address.setState(employeeRequest.getEmpAddress().getState());
-		address.setZipCode(employeeRequest.getEmpAddress().getZipCode());
-		employee.addAddress(address);}
+		if (null != employeeRequest.getEmpAddress()) {
+			Address address = new Address();
+			address.setId(employeeRequest.getEmpAddress().getId());
+			address.setStreet(employeeRequest.getEmpAddress().getStreet());
+			address.setCity(employeeRequest.getEmpAddress().getCity());
+			address.setState(employeeRequest.getEmpAddress().getState());
+			address.setZipCode(employeeRequest.getEmpAddress().getZipCode());
+			employee.addAddress(address);
+		}
 
 		employee.setEmpId(employeeRequest.getEmpId());
 		employee.setEmpAge(employeeRequest.getEmpAge());
@@ -140,7 +147,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		employeeDao.saveEmployee(employee);
 
-		
+
 		return this.getEmployeeById(employee.getEmpId());
 	}
 
@@ -163,5 +170,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Long count = employeeJpaRepository.employeeCount();
 		return count;
 
+	}
+
+	/* Either @Retry or @CircuitBraker annotation will work properly*/
+	//@Retry(name = "testRetry", fallbackMethod = "testFallbackResponse")
+	@CircuitBreaker(name = "testCB", fallbackMethod = "testFallbackResponse")
+	@Override
+	public ResponseEntity testCircuitBreakerPattern(String productId) {
+		System.out.println("🔁 getInventory() called for product: " + productId);
+		throw new RuntimeException();
+	}
+
+	public ResponseEntity testFallbackResponse(String productId, Throwable t) {
+		return ResponseEntity.internalServerError().body(Map.of("message","Inventory unavailable. Please try later."));
 	}
 }
