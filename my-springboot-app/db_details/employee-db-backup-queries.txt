@@ -1,0 +1,55 @@
+CREATE DATABASE `myspringappdb` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+CREATE TABLE `employees` (
+  `emp_id` int NOT NULL AUTO_INCREMENT,
+  `emp_name` varchar(25) NOT NULL,
+  `emp_age` int NOT NULL,
+  `emp_gender` varchar(25) NOT NULL,
+  `emp_department` varchar(25) NOT NULL,
+  `emp_year_of_joining` int NOT NULL,
+  `emp_average_salary` int NOT NULL,
+  PRIMARY KEY (`emp_id`),
+  UNIQUE KEY `emp_id` (`emp_id`),
+  UNIQUE KEY `emp_name` (`emp_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `myspringappdb`.`employees`
+(`emp_id`,
+`emp_name`,
+`emp_age`,
+`emp_gender`,
+`emp_department`,
+`emp_year_of_joining`,
+`emp_average_salary`)
+VALUES
+(<{emp_id: }>,
+<{emp_name: }>,
+<{emp_age: }>,
+<{emp_gender: }>,
+<{emp_department: }>,
+<{emp_year_of_joining: }>,
+<{emp_average_salary: }>);
+
+SELECT `employees`.`emp_id`,
+    `employees`.`emp_name`,
+    `employees`.`emp_age`,
+    `employees`.`emp_gender`,
+    `employees`.`emp_department`,
+    `employees`.`emp_year_of_joining`,
+    `employees`.`emp_average_salary`
+FROM `myspringappdb`.`employees`;
+
+UPDATE `myspringappdb`.`employees`
+SET
+`emp_id` = <{emp_id: }>,
+`emp_name` = <{emp_name: }>,
+`emp_age` = <{emp_age: }>,
+`emp_gender` = <{emp_gender: }>,
+`emp_department` = <{emp_department: }>,
+`emp_year_of_joining` = <{emp_year_of_joining: }>,
+`emp_average_salary` = <{emp_average_salary: }>
+WHERE `emp_id` = <{expr}>;
+
+DELETE FROM `myspringappdb`.`employees`
+WHERE <{where_expression}>;
+

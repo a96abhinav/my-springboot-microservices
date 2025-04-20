@@ -1,0 +1,6 @@
+log.out
+.classpath
+.project
+.settings/
+target/
+/classpath
