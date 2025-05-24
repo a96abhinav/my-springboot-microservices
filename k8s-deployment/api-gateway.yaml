@@ -14,12 +14,23 @@ spec:
       labels:
         app: api-gateway
     spec:
+      initContainers:
+        - name: wait-for-config-server
+          image: busybox
+          command: [ 'sh', '-c', 'until nc -z config-server 8888; do sleep 5; done' ]
       containers:
         - name: api-gateway
           image: a96abhinav/my-springboot-microservices-api-gateway:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
           env:
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               value: "http://service-registry:8761/eureka"

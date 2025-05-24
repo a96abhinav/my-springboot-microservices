@@ -14,12 +14,26 @@ spec:
       labels:
         app: springboot-app
     spec:
+      initContainers:
+        - name: wait-for-service-registry
+          image: busybox
+          command: [ 'sh', '-c', 'until nc -z service-registry 8761; do sleep 5; done' ]
+        - name: wait-for-config-server
+          image: busybox
+          command: [ 'sh', '-c', 'until nc -z config-server 8888; do sleep 5; done' ]
       containers:
         - name: springboot-app
           image: a96abhinav/my-springboot-microservices-springboot-app:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8085
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8085
+            initialDelaySeconds: 15
+            periodSeconds: 5
+
           env:
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               value: "http://service-registry:8761/eureka"

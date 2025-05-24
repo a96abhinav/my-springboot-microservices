@@ -20,6 +20,13 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8761
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8761
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
       imagePullSecrets:
         - name: my-docker-registry-key
 ---
