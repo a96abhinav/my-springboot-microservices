@@ -52,18 +52,8 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    def services = ['service-registry', 'config-server', 'api-gateway', 'springboot-app']
-
-                    for (service in services) {
-                        def deploymentExists = bat(script: 'kubectl get deployment ${service} >nul 2>&1', returnStatus: true) == 0
-                        if (deploymentExists) {
-                            echo "${service} already exists. Updating deployment..."
-                            bat "kubectl rollout restart deployment/${service}"
-                        } else {
-                            echo "${service} not found. Creating new deployment..."
-                            bat "kubectl apply -f k8s-deployment/${service}.yaml"
-                        }
-                    }
+                    bat "kubectl delete -f k8s-deployment/"
+                    bat "kubectl apply -f k8s-deployment/"
                 }
             }
         }
