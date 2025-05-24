@@ -52,8 +52,12 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    bat "kubectl delete -f k8s-deployment/"
                     bat "kubectl apply -f k8s-deployment/"
+
+                    bat "kubectl rollout restart deployment/service-registry"
+                    bat "kubectl rollout restart deployment/config-server"
+                    bat "kubectl rollout restart deployment/api-gateway"
+                    bat "kubectl rollout restart deployment/springboot-app"
                 }
             }
         }
