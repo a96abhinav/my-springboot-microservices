@@ -2,7 +2,8 @@ spring:
   application:
     name: my-springboot-app
   config:
-    import: configserver:http://localhost:8888
+#    import: configserver:http://localhost:8888
+    import: configserver:http://config-server:8888
   cloud:
    config:
     label: ${spring.profiles.active}

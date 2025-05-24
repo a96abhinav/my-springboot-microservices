@@ -8,10 +8,10 @@ RUN apt-get update && apt-get install -y curl
 WORKDIR /app
 
 # Copy the application JAR file into the container
-COPY target/my-service-registry-app.jar my-service-registry-app.jar
+COPY target/my-api-gateway-app.jar my-api-gateway-app.jar
 
 # Expose the port your Spring Boot app runs on
-EXPOSE 8761
+EXPOSE 8081
 
 # Run the JAR file
-ENTRYPOINT ["java", "-jar", "my-service-registry-app.jar"]
+ENTRYPOINT ["java", "-jar", "my-api-gateway-app.jar"]
