@@ -4,43 +4,66 @@ pipeline {
         KUBECONFIG = '"C:/Users/Dell/.kube/config"'
     }
     stages{
-        stage('Build Maven'){
+        stage('Git Checkout'){
             steps{
-                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://a96abhinav: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@github.com/a96abhinav/my-config-server.git']])
-                bat 'mvn clean install'
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://a96abhinav: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@github.com/a96abhinav/my-springboot-microservices.git']])
             }
         }
-        stage('Build Docker Image'){
+        stage('Maven Build'){
             steps{
-                script{
-                    bat 'docker build -t a96abhinav/my-config-server-app:latest .'
+                bat 'mvn clean install -DskipTests'
+            }
+        }
+        stage('Create Docker Images') {
+            steps {
+                script {
+                    bat "docker-compose build"
                 }
             }
         }
-        stage('Push Image to DockerHub') {
+        stage('Push Images to DockerHub') {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'dockerhub_pass', variable: 'dockerhub_pass')]) {
-                        bat 'docker login -u a96abhinav -p %dockerhub_pass% '
-                        bat 'docker push a96abhinav/my-config-server-app:latest'
+                        bat 'docker login -u a96abhinav -p %dockerhub_pass%'
+
+                        bat "docker tag my-springboot-microservices-service-registry a96abhinav/my-springboot-microservices-service-registry:latest"
+                        bat "docker tag my-springboot-microservices-config-server a96abhinav/my-springboot-microservices-config-server:latest"
+                        bat "docker tag my-springboot-microservices-api-gateway a96abhinav/my-springboot-microservices-api-gateway:latest"
+                        bat "docker tag my-springboot-microservices-springboot-app a96abhinav/my-springboot-microservices-springboot-app:latest"
+
+                        bat "docker push a96abhinav/my-springboot-microservices-service-registry:latest"
+                        bat "docker push a96abhinav/my-springboot-microservices-config-server:latest"
+                        bat "docker push a96abhinav/my-springboot-microservices-api-gateway:latest"
+                        bat "docker push a96abhinav/my-springboot-microservices-springboot-app:latest"
                     }
                 }
-
             }
         }
+
+        // stage('Deploy to Docker') {
+        //     steps {
+        //         script {
+        //             bat "docker-compose up -d"
+        //         }
+        //     }
+        // }
+
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    def deploymentExists = bat(script: 'kubectl get deployment my-config-server-app >nul 2>&1', returnStatus: true) == 0
+                    def services = ['service-registry', 'config-server', 'api-gateway', 'springboot-app']
 
-                    if (deploymentExists) {
-                        echo 'Deployment exists. Deleting...'
-                        bat 'kubectl delete -f deployment.yaml'
-                    } else {
-                        echo 'Deployment does not exist.'
+                    for (service in services) {
+                        def deploymentExists = bat(script: 'kubectl get deployment ${service} >nul 2>&1', returnStatus: true) == 0
+                        if (deploymentExists) {
+                            echo "${service} already exists. Updating deployment..."
+                            bat "kubectl rollout restart deployment/${service}"
+                        } else {
+                            echo "${service} not found. Creating new deployment..."
+                            bat "kubectl apply -f k8s-deployment/${service}.yaml"
+                        }
                     }
-
-                    bat 'kubectl apply -f deployment.yaml --validate=false'
                 }
             }
         }
