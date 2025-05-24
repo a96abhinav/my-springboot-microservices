@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y curl
 WORKDIR /app
 
 # ADD the application JAR file into the container
-ADD target/my-spring-boot-app.jar my-springboot-app.jar
+ADD target/my-springboot-app.jar my-springboot-app.jar
 
 # Expose the port your Spring Boot app runs on
 EXPOSE 8085

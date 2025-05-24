@@ -11,7 +11,7 @@
 
 	<artifactId>my-config-server</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<name>config-server</name>
+	<name>my-config-server</name>
 	<description>Spring cloud config server implementaion</description>
 	<packaging>jar</packaging>
 
