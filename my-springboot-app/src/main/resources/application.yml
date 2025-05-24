@@ -12,4 +12,4 @@ spring:
     retry.max-interval: 2000
     retry.max-attempts: 6
   profiles:
-    active: dev
+    active: docker
