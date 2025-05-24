@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: springboot-app
-          image: a96abhinav/my-springboot-microservices-api-gateway:latest
+          image: a96abhinav/my-springboot-microservices-springboot-app:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8085
