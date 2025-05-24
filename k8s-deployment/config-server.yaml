@@ -14,10 +14,6 @@ spec:
       labels:
         app: config-server
     spec:
-      initContainers:
-        - name: wait-for-service-registry
-          image: busybox
-          command: [ 'sh', '-c', 'until nc -z service-registry 8761; do sleep 5; done' ]
       containers:
         - name: config-server
           image: a96abhinav/my-springboot-microservices-config-server:latest
