@@ -20,12 +20,6 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8888
-          readinessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8888
-            initialDelaySeconds: 10
-            periodSeconds: 5
           env:
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               value: "http://service-registry:8761/eureka"
