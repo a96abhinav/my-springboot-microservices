@@ -2,7 +2,7 @@ package com.springboot.rest.controller;
 
 import java.util.List;
 
-import com.springboot.rest.model.DeleteResponseModel;
+import com.springboot.rest.model.StringResponseModel;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -70,7 +70,7 @@ public class EmployeeController implements EmployeeApi {
 
 	@Override
 	@DeleteMapping(path = "/employee/{employee-id}")
-	public ResponseEntity<DeleteResponseModel> deleteEmployeeById(@PathVariable("employee-id") int id) {
+	public ResponseEntity<StringResponseModel> deleteEmployeeById(@PathVariable("employee-id") int id) {
 
 		EmployeeModel emp = employeeService.getEmployeeById(id);
 		employeeService.delete(id);
@@ -78,7 +78,7 @@ public class EmployeeController implements EmployeeApi {
 		String response = "Employee " + emp.getEmpName() + " with Employee Id - " + emp.getEmpId()
 				+ " is removed from organization.";
 
-		DeleteResponseModel deleteResponse = new DeleteResponseModel(response);
+		StringResponseModel deleteResponse = new StringResponseModel(response);
 
 		return ResponseEntity.ok(deleteResponse);
 	}

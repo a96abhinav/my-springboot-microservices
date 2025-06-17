@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeleteResponseModel {
+public class StringResponseModel {
 
     private String response;
 }

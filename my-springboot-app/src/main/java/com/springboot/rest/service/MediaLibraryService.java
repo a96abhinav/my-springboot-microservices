@@ -1,11 +1,10 @@
 package com.springboot.rest.service;
 
 import com.springboot.rest.entity.myspringappdb.MediaLibrary;
-import com.springboot.rest.model.DeleteResponseModel;
+import com.springboot.rest.model.StringResponseModel;
 import com.springboot.rest.model.MediaLibraryModel;
 import com.springboot.rest.repository.myspringappdb.MediaLibraryRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,8 +45,8 @@ public class MediaLibraryService {
         return mlmList;
     }
 
-    public DeleteResponseModel deleteByMediaId(Integer mediaId){
+    public StringResponseModel deleteByMediaId(Integer mediaId){
         repository.deleteById(mediaId);
-        return new DeleteResponseModel("Media with mediaId - "+mediaId+" successfully deleted.");
+        return new StringResponseModel("Media with mediaId - "+mediaId+" successfully deleted.");
     }
 }

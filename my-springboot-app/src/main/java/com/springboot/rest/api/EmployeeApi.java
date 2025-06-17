@@ -2,7 +2,7 @@ package com.springboot.rest.api;
 
 import java.util.List;
 
-import com.springboot.rest.model.DeleteResponseModel;
+import com.springboot.rest.model.StringResponseModel;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
@@ -27,7 +27,7 @@ public interface EmployeeApi {
 	ResponseEntity<EmployeeModel> addEmployee(JsonNode body);
 
 	@Operation(summary = "This endpoint is used to delete the employee details by employee Id.")
-    ResponseEntity<DeleteResponseModel> deleteEmployeeById(int id);
+    ResponseEntity<StringResponseModel> deleteEmployeeById(int id);
 
 	@Operation(summary = "This endpoint is used to fetch the male and female count.")
 	ResponseEntity<List<MaleAndFemaleCountByDepartment>> findMaleAndFemaleCount();

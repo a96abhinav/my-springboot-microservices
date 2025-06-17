@@ -3,7 +3,7 @@ package com.springboot.rest.controller;
 import com.springboot.rest.constants.CommonConstants;
 import com.springboot.rest.enums.MediaLibraryGenre;
 import com.springboot.rest.enums.MediaLibraryType;
-import com.springboot.rest.model.DeleteResponseModel;
+import com.springboot.rest.model.StringResponseModel;
 import com.springboot.rest.model.MediaLibraryModel;
 import com.springboot.rest.service.MediaLibraryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -92,7 +92,7 @@ public class MediaLibraryController {
     }
 
     @DeleteMapping(path = "/deleteByMediaId/{mediaId}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<DeleteResponseModel> deleteByMediaId(@PathVariable Integer mediaId){
+    public ResponseEntity<StringResponseModel> deleteByMediaId(@PathVariable Integer mediaId){
         return ResponseEntity.ok(service.deleteByMediaId(mediaId));
     }
 }

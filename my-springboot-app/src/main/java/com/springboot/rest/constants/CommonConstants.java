@@ -12,4 +12,5 @@ public class CommonConstants {
 	public final String BOOK_SVC_PATH = "book-svc";
     public final String USER_SERVICE = "user-svc";
 	public final String FILE_SERVICE = "file-svc";
+	public final String EMAIL_SVC = "email-svc";
 }
