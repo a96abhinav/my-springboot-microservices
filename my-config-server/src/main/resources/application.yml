@@ -5,7 +5,7 @@ spring:
     config:
       server:
         git:
-          uri: https://a96abhinav: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@github.com/a96abhinav/my-cloud-config-repository.git
+          uri: git@github.com:a96abhinav/my-cloud-config-repository.git
           default-label: dev
           timeout: 5
 eureka:
